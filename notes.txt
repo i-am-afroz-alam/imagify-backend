@@ -1,0 +1,13 @@
+How to connect MongoDB server?
+Create a server on MongoDb Atlas and get the connection string.
+Then store it in MONGODB_URI variable in .env file.
+Then create a file named mongodb.js in config folder and add the following code:
+import mongoose from "mongoose"; 
+const connectDB = async () => {
+  mongoose.connection.on("connected", () => {
+    console.log("MongoDB Connected Successfully...");
+  });
+  await mongoose.connect(`${process.env.MONGODB_URI}/imagify`);
+}
+export default connectDB;
+Then import this file in server.js and call the function connectDB() before starting the server.
