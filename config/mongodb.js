@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
-import { useState } from "react";
 
-const connectDB = async (isconnected) => {
+export let connected = false;
+
+const connectDB = async () => {
   const mongoUri = process.env.MONGODB_URI;
 
   if (!mongoUri) {
     throw new Error(
-      "MONGODB_URI is not set. Add it to server/.env before starting the server.",
+      "MONGODB_URI is not set. Set it in Vercel environment variables.",
     );
   }
 
@@ -16,10 +17,10 @@ const connectDB = async (isconnected) => {
       : `mongodb://${mongoUri}`;
 
   mongoose.connection.on("connected", () => {
-    isconnected = true;
+    connected = true;
     console.log("MongoDB Connected Successfully...");
   });
   await mongoose.connect(`${connectionString}/imagify`);
 };
 
-export default { connectDB, connected };
+export default connectDB;

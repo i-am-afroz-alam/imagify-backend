@@ -13,11 +13,15 @@ app.use(express.json());
 app.use(cors());
 
 let isconnected = false;
-// await connectDB();
-
 app.use(async (req, res, next) => {
-  if (isconnected) {
-    await connectDB(isconnected);
+  if (!isconnected) {
+    try {
+      await connectDB();
+      isconnected = true;
+    } catch (err) {
+      console.error("DB connection failed:", err);
+      return res.status(500).send("Internal Server Error");
+    }
   }
   next();
 });
@@ -32,4 +36,4 @@ app.get("/", (req, res) => res.send("API is running fine and good...."));
 //   console.log(`Server is running on port http://localhost:${PORT}`),
 // );
 
-module.exports = app;
+export default app;
